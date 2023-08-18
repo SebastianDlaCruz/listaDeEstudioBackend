@@ -49,7 +49,7 @@ export const update = async (req:Request,res:Response) =>{
   }
 }
 
-export const del = async (req:Request,res:Response) =>{
+export const destroy = async (req:Request,res:Response) =>{
 
   try{
     const {idLista}  = req.params

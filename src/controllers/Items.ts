@@ -5,81 +5,72 @@ const prisma = new PrismaClient();
 
 export const index = async (req:Request,res:Response) =>{
   
-  try {
-    
-    const lista = await prisma.items.findMany();
-    res.json(lista);
-
+  try {   
+    const items = await prisma.items.findMany();
+    res.json(items);
   } catch (error) {
     res.status(505).json({error:'Error al conectar las base de datos'})
   }
 }
 
 export const store = async (req:Request,res:Response) =>{
+  
   try {
-    
-    const {description,referencias} = req.body;
+    const {description,subListaId,referencias} = req.body
     const nuevaLista = await prisma.items.create({
       data:{
         description,
         referencias,
+        subListaId: parseInt(subListaId)
       }
     })
-
     res.json(nuevaLista);
-
   } catch (error) {
     res.status(500).json({ error: "Error al crear un nuevo item" });
   } 
 }
 
 export const update = async (req:Request,res:Response) =>{
-
-  try{
-    const {description,referencias,idSud} = req.body;
-    const {idItems}  = req.params
-    const updateLista = await prisma.items.update({
-      where: {id: parseInt(idItems)},
-      data: {
+  try {
+    const {description,subListaId,referencias} = req.body;
+    const {idItems} = req.params;
+    const nuevaLista = await prisma.items.update({
+      where:{id:parseInt(idItems)},
+      data:{
         description,
         referencias,
-        subListaId: parseInt(idSud)
+        subListaId: parseInt(subListaId)
       }
     })
-    
-    res.json(updateLista);
-  }catch(error){
-
-    res.status(500).json({error: "Error al actualizar una lista"})
-  }
+    res.json(nuevaLista);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear un nuevo item" });
+  } 
 }
 
-export const del = async (req:Request,res:Response) =>{
+export const destroy = async (req:Request,res:Response) =>{
 
-  try{
-    
-    const {idItems}  = req.params
-    const updateLista = await prisma.items.delete({
-      where: {id: parseInt(idItems) }
+  try {
+    const {idItems} = req.params;
+    const nuevaLista = await prisma.items.delete({
+      where:{id:parseInt(idItems)}
     })
-
-    res.json(updateLista);
-  }catch(error){
-    res.status(500).json({error: "Error al borrar una lista"})
-  }
+    res.json(nuevaLista);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear un nuevo item" });
+  } 
 }
 
 
-export const show = async(req:Request,res:Response) =>{
-
-  try{ 
-    const {idItem}  = req.params
-    const updateLista = await prisma.items.findUnique({
-      where: {id: parseInt(idItem) }
+export const show = async (req:Request,res:Response) =>{
+  try {
+  
+    const {idItems} = req.params;
+    const nuevaLista = await prisma.items.findUnique({
+      where:{id:parseInt(idItems)},
     })
-
-    res.json(updateLista);
-  }catch(error){
-    res.status(500).json({error: "Error al borrar una lista"})
-  }
+    res.json(nuevaLista);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear un nuevo item" });
+  } 
 }
